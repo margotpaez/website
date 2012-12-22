@@ -15,8 +15,8 @@ require_once DOKU_PLUGIN.'syntax.php';
 //Include LVH Plugin Common Code
 if(!defined('LVH_COMMON'))
 {
-	define('LVH_COMMON', '/var/www/wordpress/wiki2/lib/plugins/lvhplugincommon.php');
-	include '/var/www/wordpress/wiki2/lib/plugins/lvhplugincommon.php'; 
+	define('LVH_COMMON', 'lib/plugins/lvhplugincommon.php');
+	include 'lib/plugins/lvhplugincommon.php'; 
 }
  
 /********************************************************************************************************************************
@@ -26,7 +26,7 @@ if(!defined('LVH_COMMON'))
 class syntax_plugin_lvhinstructionstep extends DokuWiki_Syntax_Plugin 
 {
 
-	//Return Plugin Info
+//Return Plugin Info
 	function getInfo() 
 	{
         return array('author' => 'Sammy_K',

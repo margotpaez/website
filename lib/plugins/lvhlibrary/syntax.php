@@ -4,14 +4,13 @@
 * LabVIEW Hacker Hardware Tile Template Plugin
 *
 /*******************************************************************************************************************************/
- 
- 
+  
 // must be run within DokuWiki
 if(!defined('DOKU_INC')) die();
  
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once DOKU_PLUGIN.'syntax.php';
- 
+
 //Include LVH Plugin Common Code
 if(!defined('LVH_COMMON'))
 {
@@ -23,17 +22,16 @@ if(!defined('LVH_COMMON'))
 * All DokuWiki plugins to extend the parser/rendering mechanism
 * need to inherit from this class
 ********************************************************************************************************************************/
-class syntax_plugin_lvhsoftware extends DokuWiki_Syntax_Plugin 
+class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin 
 {
-
 	//Return Plugin Info
 	function getInfo() 
 	{
         return array('author' => 'Sammy_K',
                      'email'  => 'sammyk.labviewhacker@gmail.com',
                      'date'   => '2012-12-21',
-                     'name'   => 'LabVIEW Hacker Software Tile Template Plugin',
-                     'desc'   => 'Template for LabVIEW Hacker Software Tile',
+                     'name'   => 'LabVIEW Hacker Library Template Plugin',
+                     'desc'   => 'Template for LabVIEW Hacker Library Tile',
                      'url'    => 'www.labviewhacker.com');
     }
 
@@ -44,27 +42,34 @@ class syntax_plugin_lvhsoftware extends DokuWiki_Syntax_Plugin
 	protected $maxImageSize = 200;
 	
 	//Store Variables To Render
-	protected $name = '';
-	protected $homePage = '';
-	protected $version = '';
-	protected $image = '';	
-	protected $imageSize = '';
-	protected $downloadLink = '';
-  
+	protected $title = '';	
+	protected $image = '';
+	protected $description = '';
+	protected $date = '';
+	protected $hacker = '';
+	
+  /********************************************************************************************************************************************
+	** Plugin Configuration
+	********************************************************************************************************************************************/			
+				
     function getType() { return 'protected'; }
     function getSort() { return 32; }
   
     function connectTo($mode) {
-        $this->Lexer->addEntryPattern('{{lvh_software.*?(?=.*?}})',$mode,'plugin_lvhsoftware');
+        $this->Lexer->addEntryPattern('{{lvh_library.*?(?=.*?}})',$mode,'plugin_lvhlibrary');
 		
 		//Add Internal Pattern Match For Product Page Elements	
-		$this->Lexer->addPattern('\|.*?(?=.*?)\n','plugin_lvhsoftware');
+		$this->Lexer->addPattern('\|.*?(?=.*?)\n','plugin_lvhlibrary');
     }
 	
     function postConnect() {
-      $this->Lexer->addExitPattern('}}','plugin_lvhsoftware');
+      $this->Lexer->addExitPattern('}}','plugin_lvhlibrary');
     }
 	 
+	/********************************************************************************************************************************************
+	** Handle
+	********************************************************************************************************************************************/			
+				
     function handle($match, $state, $pos, &$handler) 
 	{	
 		
@@ -80,21 +85,21 @@ class syntax_plugin_lvhsoftware extends DokuWiki_Syntax_Plugin
 				$value = substr($match, ($tokenDiv + 1));						//Everything after '='
 				switch($token)
 				{
-					case 'name':						
-						$this->name = $value;
-						break;	
-					case 'home page':						
-						$this->homePage = $value;
-						break;	
-					case 'version':						
-						$this->version = $value;
-						break;	
-					case 'image':
-						$this->image = lvh_getImageURL($value);
+					case 'title':						
+						$this->title = lvh_parseWikiSyntax($value);
+						break;						
+					case 'image':						
+						$this->image = lvh_getImageLink($value);
 						break;
-					case 'download link':						
-						$this->downloadLink = $value;
+					case 'description':						
+						$this->description = $value;
 						break;	
+					case 'date':						
+						$this->date = $value;
+						break;
+					case 'hacker':						
+						$this->hacker = $value;
+						break;						
 					default:
 						break;
 				}
@@ -103,22 +108,25 @@ class syntax_plugin_lvhsoftware extends DokuWiki_Syntax_Plugin
 			case DOKU_LEXER_UNMATCHED :
 				break;
 			case DOKU_LEXER_EXIT :
-				return array($state, $this->name, $this->homePage, $this->version, $this->image, $this->imageSize, $this->downloadLink);
+				$retVal = array($state, $this->title, $this->image, $this->description, $this->date, $this->hacker);
+					//Clear Variables Thta Will Be Resused Here If Neccissary (might not be needed in this plugin)
+				return $retVal;
 				break;
 			case DOKU_LEXER_SPECIAL :
 				break;
-		}
-			
+		}			
 		return array($state, $match);
     }
  
+	/********************************************************************************************************************************************
+	** Render
+	********************************************************************************************************************************************/
+	
     function render($mode, &$renderer, $data) 
 	{
     // $data is what the function handle return'ed.
         if($mode == 'xhtml')
-		{		
-			
-			$renderer->doc .= $this->fullName;
+		{
 			switch ($data[0]) 
 			{
 			  case DOKU_LEXER_ENTER : 
@@ -129,12 +137,7 @@ class syntax_plugin_lvhsoftware extends DokuWiki_Syntax_Plugin
 				break;
 			  case DOKU_LEXER_MATCHED :
 				//Add Table Elements Based On Type
-				if($this->lvhDebug) $renderer->doc .= 'MATCHED';		//Debug
-								
-				//$renderer->doc .= '<tr><td>';
-				//$renderer->doc .= $data[2];	
-				//$renderer->doc .= '</td></tr>';
-				
+				if($this->lvhDebug) $renderer->doc .= 'MATCHED';		//Debug				
 				break;
 			  case DOKU_LEXER_UNMATCHED :
 				//Ignore
@@ -146,84 +149,67 @@ class syntax_plugin_lvhsoftware extends DokuWiki_Syntax_Plugin
 				//$renderer->doc.= '</table></body></HTML>';
 				
 				//Separate Data
-				 $instName = $data[1];
-				 $insthomePage = $data[2];
-				 $instVersion = $data[3];
-				 $instImage = $data[4];
-				 $instImageSize = $data[5];
-				 $instdownloadLink = $data[6];				
-				
-				//Optional Version Cell
-				$versionCell = '';
-				if($instVersion != '')
-				{
-					$versionCell = 	"<tr>
-										<td>
-											<center><font size='1'> Version: " . $instVersion . " </font></center>
-										</td>
-									</tr>";
-				}
-				
+				 $instTitle = $data[1];
+				 $instImage = $data[2];
+				 $instDescription = $data[3];
+				 $instDate = $data[4];
+				 $instHacker = $data[5];
 				
 				$renderer->doc .= "
-					<html>
-						<head>
-							<style type='text/css'>
-								table.containerTable
-								{
-									background:transparent;
-									float: left;
-									border-collapse:collapse; 
-									border:0px solid black;
-									border-radius: 10px;									
-								}								
-								table.containerTable td:hover
-								{
-									float: left;
-									border-radius: 10px;									
-								}
-								table.containerTable td 
-								{ 									
-									border:0px;
-								}	
-								
-								table.software 
-								{ 
-									border-collapse:collapse; 
-									width:200px; 
-									border:0px solid black;
-									border-radius:10px;
-									background:transparent;
-								}									
-								table.software td 
-								{ 									
-									border:0px;
-								}								
-							</style>
-						</head>
-						<body>
-						<table class='containerTable' >
-						<tr>
-						<td>
-							<table class='software'>
-								<tr>
-									<td>
-										<center><font size='4'><a href='" . $insthomePage . "'>" . $instName . "</a> </font></center>
-									</td>
-								</tr>
-									" . $versionCell . "
-								<tr>
-									<td>
-										<center><img src = '" . $instImage . "' width='" . $instImageSize . "'></center>
-									</td>
-								</tr>
-							</table>
-						</td>
-						</tr>
+					<head>
+						<style type='text/css'>
+						
+							table.libraryTile
+							{  
+								width:30%;
+								border:2px solid;
+								border-color:#CCCCCC;
+								background-color: white;	
+								float:left;
+								margin:10px;
+							}
+							
+							tr.libraryTileRow
+							{ 
+								border:0px;	
+							}							
+
+							td.libraryTileCell
+							{ 
+								border:0px;
+								vertical-align:middle;	
+							}	
+
+							
+							
+						</style>
+					</head>
+
+					<body>
+						<table class='libraryTile'>
+							<tr>
+								<td class='libraryTileCell'>
+									<font size='4em'>" . $instTitle . "</font>
+								</td>
+							</tr>
+							<tr>
+								<td class='libraryTileCell'>
+									<font size='2em'>Hacked By: <b>" . $instHacker . "</b><br />Date:" . $instDate . " </align></font>
+								</td>
+							</tr>
+							<tr>
+								<td class='libraryTileCell'>
+									<center>" . $instImage . "</center>
+								</td>
+							</tr>
+							<tr>
+								<td class='libraryTileCell'>
+									" . $instDescription . " Read more about " . $instTitle . "
+								</td>
+							</tr>
 						</table>
-						</body>
-					</html>				
-					";
+					</body>				
+				";		
 				
 				break;
 			  case DOKU_LEXER_SPECIAL :

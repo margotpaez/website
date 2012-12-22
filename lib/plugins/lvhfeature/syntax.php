@@ -11,7 +11,7 @@ if(!defined('DOKU_INC')) die();
  
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once DOKU_PLUGIN.'syntax.php';
- 
+
 //Include LVH Plugin Common Code
 if(!defined('LVH_COMMON'))
 {
@@ -23,7 +23,7 @@ if(!defined('LVH_COMMON'))
 * All DokuWiki plugins to extend the parser/rendering mechanism
 * need to inherit from this class
 ********************************************************************************************************************************/
-class syntax_plugin_lvhhardware extends DokuWiki_Syntax_Plugin 
+class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin 
 {
 
 	//Return Plugin Info
@@ -32,10 +32,11 @@ class syntax_plugin_lvhhardware extends DokuWiki_Syntax_Plugin
         return array('author' => 'Sammy_K',
                      'email'  => 'sammyk.labviewhacker@gmail.com',
                      'date'   => '2012-12-21',
-                     'name'   => 'LabVIEW Hacker Hardware Tile Template Plugin',
-                     'desc'   => 'Template for LabVIEW Hacker Hardware Tile',
+                     'name'   => 'LabVIEW Hacker Feature Template Plugin',
+                     'desc'   => 'Template for LabVIEW Hacker Feature',
                      'url'    => 'www.labviewhacker.com');
     }
+	
 
 	//Set This To True To Enable Debug Strings
 	protected $lvhDebug = false;
@@ -46,26 +47,33 @@ class syntax_plugin_lvhhardware extends DokuWiki_Syntax_Plugin
 	/***************************************************************************************************************************
 	* Plugin Variables
 	***************************************************************************************************************************/
-	protected	$name = '';
-	protected	$page = '';
-	protected	$version = '';
-	protected	$image = '';	
-	protected	$imageSize = '';	
-  
+	protected $title = '';	
+	protected $image = '';
+	protected $description = array();
+	
+	
+    /********************************************************************************************************************************************
+	** Plugin Configuration
+	********************************************************************************************************************************************/			
+				
     function getType() { return 'protected'; }
     function getSort() { return 32; }
   
     function connectTo($mode) {
-        $this->Lexer->addEntryPattern('{{lvh_hardware.*?(?=.*?}})',$mode,'plugin_lvhhardware');
+        $this->Lexer->addEntryPattern('{{lvh_feature.*?(?=.*?}})',$mode,'plugin_lvhfeature');
 		
 		//Add Internal Pattern Match For Product Page Elements	
-		$this->Lexer->addPattern('\|.*?(?=.*?)\n','plugin_lvhhardware');
+		$this->Lexer->addPattern('\|.*?(?=.*?)\n','plugin_lvhfeature');
     }
 	
     function postConnect() {
-      $this->Lexer->addExitPattern('}}','plugin_lvhhardware');
+      $this->Lexer->addExitPattern('}}','plugin_lvhfeature');
     }
 	 
+	/********************************************************************************************************************************************
+	** Handle
+	********************************************************************************************************************************************/			
+				
     function handle($match, $state, $pos, &$handler) 
 	{	
 		
@@ -81,18 +89,15 @@ class syntax_plugin_lvhhardware extends DokuWiki_Syntax_Plugin
 				$value = substr($match, ($tokenDiv + 1));						//Everything after '='
 				switch($token)
 				{
-					case 'name':						
-						$this->name = $value;
-						break;	
-					case 'page':						
-						$this->page = $value;
-						break;	
-					case 'version':						
-						$this->version = $value;
-						break;	
+					case 'title':						
+						$this->title = lvh_parseWikiSyntax($value);
+						break;						
 					case 'image':						
-						$this->image = lvh_getImageURL($value);
+						$this->image = lvh_getImageLink($value);
 						break;
+					case 'description':						
+						$this->description[] = lvh_parseWikiSyntax($value);
+						break;						
 					default:
 						break;
 				}
@@ -101,22 +106,36 @@ class syntax_plugin_lvhhardware extends DokuWiki_Syntax_Plugin
 			case DOKU_LEXER_UNMATCHED :
 				break;
 			case DOKU_LEXER_EXIT :
-				return array($state, $this->name, $this->page, $this->version, $this->image, $this->imageSize);
+				/********************************************************************************************************************************************
+				** Build Details Unordered List
+				********************************************************************************************************************************************/			
+				$fullDescription = "<ul>";
+				foreach($this->description as $descLine)
+				{
+					$fullDescription .= '<li>' . $descLine . '</li>';
+				}
+				$fullDescription .= '</ul>';
+				
+				$retVal = array($state, $this->title, $this->image, $fullDescription);
+				//Clear Variables Thta Will Be Resused Here If Neccissary (might not be needed in this plugin)
+				$this->description = array();
+				return $retVal;
 				break;
 			case DOKU_LEXER_SPECIAL :
 				break;
-		}
-			
+		}			
 		return array($state, $match);
     }
  
+	/********************************************************************************************************************************************
+	** Render
+	********************************************************************************************************************************************/
+	
     function render($mode, &$renderer, $data) 
 	{
     // $data is what the function handle return'ed.
         if($mode == 'xhtml')
-		{		
-			
-			$renderer->doc .= $this->fullName;
+		{
 			switch ($data[0]) 
 			{
 			  case DOKU_LEXER_ENTER : 
@@ -127,12 +146,7 @@ class syntax_plugin_lvhhardware extends DokuWiki_Syntax_Plugin
 				break;
 			  case DOKU_LEXER_MATCHED :
 				//Add Table Elements Based On Type
-				if($this->lvhDebug) $renderer->doc .= 'MATCHED';		//Debug
-								
-				//$renderer->doc .= '<tr><td>';
-				//$renderer->doc .= $data[2];	
-				//$renderer->doc .= '</td></tr>';
-				
+				if($this->lvhDebug) $renderer->doc .= 'MATCHED';		//Debug				
 				break;
 			  case DOKU_LEXER_UNMATCHED :
 				//Ignore
@@ -144,83 +158,58 @@ class syntax_plugin_lvhhardware extends DokuWiki_Syntax_Plugin
 				//$renderer->doc.= '</table></body></HTML>';
 				
 				//Separate Data
-				 $instName = $data[1];
-				 $instPage = $data[2];
-				 $instVersion = $data[3];
-				 $instImage = $data[4];
-				 $instImageSize = $data[5];	
-				
-				//Optional Version Cell
-				$versionCell = '';
-				if($instVersion != '')
-				{
-					$versionCell = 	"<tr>
-										<td>
-											<center><font size='1'> Version: " . $instVersion . " </font></center>
-										</td>
-									</tr>";
-				}
-				
+				 $instTitle = $data[1];
+				 $instImage = $data[2];
+				 $instDescription = $data[3];				
 				
 				$renderer->doc .= "
-					<html>
-						<head>
-							<style type='text/css'>
-								table.hwContainerTable
-								{
-									background:transparent;
-									float: left;
-									border-collapse:collapse; 
-									border:0px solid black;
-									border-radius: 10px;									
-								}								
-								table.hwContainerTable td:hover
-								{
-									float: left;
-									border-radius: 10px;									
-								}
-								table.hwContainerTable td 
-								{ 									
-									border:0px;
-								}	
+					<head>
+						<style type='text/css'>
+						
+							table.libraryFeature
+							{  
+								width:100%;
+								border-width:0px;
+								border-bottom: solid 2px #CCCCCC;
+								background-color: white;	
+								float:left;
+							}
+							
+							tr.libraryFeatureRow
+							{ 
+								border:0px solid;	
+							}							
+
+							td.libraryFeatureCell
+							{ 
+								border:0px solid;
+								vertical-align:middle;	
+							}	
+
+							
+							
+						</style>
+					</head>
+
+					<body>
+						<table class='libraryFeature'>
+							<tr class='libraryFeatureRow'>
+								<td class='libraryFeatureCell'>
+									<h3> " . $instTitle . " </h3>
+								</td>
+								<td class='libraryFeatureCell' rowspan='2'>
+									<center>" . $instImage . " </center>
+								</td>
+							</tr>
+							<tr class='libraryFeatureRow'>
+								<td class='libraryFeatureCell' width='50%'>
+									" . $instDescription . "
+								</td>
 								
-								table.hardware 
-								{ 
-									border-collapse:collapse; 
-									width:200px; 
-									border:0px solid black;
-									border-radius:10px;
-									background:transparent;
-								}									
-								table.hardware td 
-								{ 									
-									border:0px;
-								}								
-							</style>
-						</head>
-						<body>
-						<table class='hwContainerTable' >
-						<tr>
-						<td>
-							<table class='hardware'>
-								<tr>
-									<td>
-										<center><font size='4'><a href='http://ec2-107-21-156-97.compute-1.amazonaws.com/wiki2/doku.php?id=" . $instPage . "'>" . $instName . "</a> </font></center>
-									</td>
-								</tr>
-									" . $versionCell . "
-								<tr>
-									<td>
-										<center><img src = '" . $instImage . "' width='" . $instImageSize . "'></center>
-									</td>
-								</tr>
-							</table>
-						</td>
-						</tr>
+							</tr>
 						</table>
-						</body>
-					</html>				
-					";
+					</body>				
+				";		
 				
 				break;
 			  case DOKU_LEXER_SPECIAL :
