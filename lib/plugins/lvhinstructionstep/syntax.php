@@ -26,7 +26,7 @@ if(!defined('LVH_COMMON'))
 class syntax_plugin_lvhinstructionstep extends DokuWiki_Syntax_Plugin 
 {
 
-//Return Plugin Info
+	//Return Plugin Info
 	function getInfo() 
 	{
         return array('author' => 'Sammy_K',
