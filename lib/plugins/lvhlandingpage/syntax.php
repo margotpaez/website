@@ -50,9 +50,9 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 	protected	$description = '';
 	protected	$logoPath = '';
 	protected	$gettingStartedPath = '';
-	protected	$gitHubPath = '';
 	protected	$tutorialsPath = '';
 	protected	$forumPath = '';
+	protected	$gitHubPath = '';
 	protected	$howItWorks = '';
 	protected   $howItWorksPath = '';
 	protected	$exploreFeatures = '';
@@ -139,11 +139,11 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 					default:
 						break;
 				}
-				return array($state, $value);
 				break;
 			case DOKU_LEXER_UNMATCHED :
 				break;
 			case DOKU_LEXER_EXIT :
+				return array($state, $this->fullName, $this->shortName, $this->description, $this->logoPath, $this->gettingStartedPath, $this->tutorialsPath, $this->forumPath, $this->gitHubPath, $this->howItWorks, $this->howItWorksPath, $this->exploreFeatures, $this->exploreFeaturesPath, $this->seeItInAction, $this->seeItInActionPath, $this->gettingStarted);
 				break;
 			case DOKU_LEXER_SPECIAL :
 				break;
@@ -183,7 +183,23 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 			  case DOKU_LEXER_EXIT :
 				//Close Elements
 				if($this->skDebug) $renderer->doc .= 'EXIT';		//Debug
-				//$renderer->doc.= '</table></body></HTML>';
+				
+				//Break Out Local Variables For Rendering
+				$instfullName = $data[1];
+				$instshortName = $data[2];
+				$instdescription = $data[3];
+				$instlogoPath = $data[4];
+				$instgettingStartedPath = $data[5];				
+				$insttutorialsPath = $data[6];
+				$instforumPath = $data[7];
+				$instgitHubPath = $data[8];
+				$insthowItWorks = $data[9];
+				$insthowItWorksPath = $data[10];
+				$instexploreFeatures = $data[11];
+				$instexploreFeaturesPath = $data[12];
+				$instseeItInAction = $data[13];
+				$instseeItInActionPath = $data[14];
+				$instgettingStarted = $data[15];		
 				
 				$renderer->doc .= "
 					<HTML>
@@ -202,7 +218,7 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 							<table class='productPage productPage-head'>
 								<tr>
 									<td>
-										<h1> " . $this->fullName . " </h1>	
+										<h1> " . $instfullName . " </h1>	
 									</td>  					
 								</tr>								
 							</table>
@@ -210,24 +226,24 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 							<table class='productPage productPage-body'>
 								<tr>
 									<td colspan='4'>
-										" . $this->description . " <br />
+										" . $instdescription . " <br />
 									</td>
 									<td rowspan=\"2\">
-										<p align='center'><img src='" . $this->logoPath . "' width='60%' height='60%'> </p>
+										<p align='center'><img src='" . $instlogoPath . "' width='60%' height='60%'> </p>
 									</td>	
 								</tr>
 								<tr>
 									<td width='15%'>
-										<p align='center'><a href='doku.php?id=" . $this->gettingStartedPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:getting_started_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:getting_started_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:getting_started_black.png'\" /><br />Getting Started </a><br /></p>
+										<p align='center'><a href='doku.php?id=" . $instgettingStartedPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:getting_started_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:getting_started_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:getting_started_black.png'\" /><br />Getting Started </a><br /></p>
 									</td>
 									<td width='15%'>
-										<p align='center'><a href='doku.php?id=" . $this->tutorialsPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:tutorials_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:tutorials_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:tutorials_black.png'\" /><br />Tutorials </a><br /></p>
+										<p align='center'><a href='doku.php?id=" . $insttutorialsPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:tutorials_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:tutorials_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:tutorials_black.png'\" /><br />Tutorials </a><br /></p>
 									</td>
 									<td width='15%'>
-										<p align='center'><a href='" . $this->forumPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:forums_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:forums_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:forums_black.png'\" /><br />Forums </a><br /></p>
+										<p align='center'><a href='" . $instforumPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:forums_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:forums_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:forums_black.png'\" /><br />Forums </a><br /></p>
 									</td>
 									<td width='15%'>
-										<p align='center'><a href='" . $this->gitHubPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:github_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:github_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:github_black.png'\" /><br />Git Hub </a><br /></p>
+										<p align='center'><a href='" . $instgitHubPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:github_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:github_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:github_black.png'\" /><br />Git Hub </a><br /></p>
 									</td>
 																							
 								</tr>
@@ -238,33 +254,33 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 								<tr>
 									<td width='25%' style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; padding-right: 20px;\">
 										<p><b>How It Works</b><br /><br />
-										" . $this->howItWorks . "</p>										
+										" . $insthowItWorks . "</p>										
 									</td>
 									<td width='25%' style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; padding-right: 20px;\">
 										<p><b>Explore Features</b><br /><br />
-										" . $this->exploreFeatures . "</p>																				
+										" . $instexploreFeatures . "</p>																				
 									</td>
 									<td width='25%' style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; padding-right: 20px;\">
 										<p><b>See It In Action</b><br /><br />
-										" . $this->seeItInAction . "</p>	
+										" . $instseeItInAction . "</p>	
 									</td>
 									<td width='25%' style=\"padding-left: 20px; padding-right: 20px;\">
 										<p><b>Getting Started</b><br /><br />
-										" . $this->gettingStarted . "</p>												
+										" . $instgettingStarted . "</p>												
 									</td>
 								</tr>
 								<tr>
 									<td style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; \">
-										<a href='doku.php?id=" . $this->howItWorksPath . "'> See How " . $this->shortName . " Works</a>
+										<a href='doku.php?id=" . $insthowItWorksPath . "'> See How " . $instshortName . " Works</a>
 									</td>
 									<td style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; \">
-										<a href='doku.php?id=" . $this->exploreFeaturesPath . "'> Explore " . $this->shortName . " Features</a> 	
+										<a href='doku.php?id=" . $instexploreFeaturesPath . "'> Explore " . $instshortName . " Features</a> 	
 									</td>
 									<td style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; \">
-										<a href='doku.php?id=" . $this->seeItInActionPath . "'> Projects Using " . $this->shortName . "</a> 
+										<a href='doku.php?id=" . $instseeItInActionPath . "'> Projects Using " . $instshortName . "</a> 
 									</td>
 									<td style=\"padding-left: 20px;\">
-										 <a href='doku.php?id=" . $this->gettingStartedPath . "'> Start Using " . $this->shortName . "</a> 
+										 <a href='doku.php?id=" . $instgettingStartedPath . "'> Start Using " . $instshortName . "</a> 
 									</td>
 							</table>
 						</body>
