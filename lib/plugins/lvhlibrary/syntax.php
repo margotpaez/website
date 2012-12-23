@@ -43,6 +43,7 @@ class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin
 	
 	//Store Variables To Render
 	protected $title = '';	
+	protected $path = '';
 	protected $image = '';
 	protected $description = '';
 	protected $date = '';
@@ -86,7 +87,10 @@ class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin
 				switch($token)
 				{
 					case 'title':						
-						$this->title = lvh_parseWikiSyntax($value);
+						$this->title = $value;
+						break;	
+					case 'path':						
+						$this->path = $value;
 						break;						
 					case 'image':						
 						$this->image = lvh_getImageLink($value);
@@ -108,7 +112,7 @@ class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin
 			case DOKU_LEXER_UNMATCHED :
 				break;
 			case DOKU_LEXER_EXIT :
-				$retVal = array($state, $this->title, $this->image, $this->description, $this->date, $this->hacker);
+				$retVal = array($state, $this->title, $this->path, $this->image, $this->description, $this->date, $this->hacker);
 					//Clear Variables Thta Will Be Resused Here If Neccissary (might not be needed in this plugin)
 				return $retVal;
 				break;
@@ -150,10 +154,11 @@ class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin
 				
 				//Separate Data
 				 $instTitle = $data[1];
-				 $instImage = $data[2];
-				 $instDescription = $data[3];
-				 $instDate = $data[4];
-				 $instHacker = $data[5];
+				 $instPath = $data[2];
+				 $instImage = $data[3];
+				 $instDescription = $data[4];
+				 $instDate = $data[5];
+				 $instHacker = $data[6];
 				
 				$renderer->doc .= "
 					<head>
@@ -166,19 +171,35 @@ class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin
 								border-color:#CCCCCC;
 								background-color: white;	
 								float:left;
-								margin:10px;
+								margin:10px;								
 							}
 							
-							tr.libraryTileRow
-							{ 
-								border:0px;	
-							}							
+													
 
-							td.libraryTileCell
+							.libraryTileTitle
+							{ 		
+								border:1px;							
+								vertical-align:Top;	
+								height:50px;
+							}	
+							.libraryTileCredits
 							{ 
 								border:0px;
 								vertical-align:middle;	
-							}	
+								height:35px;
+							}
+							.libraryTileImage
+							{ 
+								border:0px;							
+								vertical-align:middle;	
+								height:175px;
+							}
+							.libraryDescription
+							{ 
+								border:0px;
+								vertical-align:middle;
+								height:150px;
+							}
 
 							
 							
@@ -188,23 +209,23 @@ class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin
 					<body>
 						<table class='libraryTile'>
 							<tr>
-								<td class='libraryTileCell'>
-									<font size='4em'>" . $instTitle . "</font>
+								<td class='libraryTileTitle'>
+									<font size='4em'><a href='doku.php?id=" . $instPath . "'>" . $instTitle . "</a></font>
 								</td>
 							</tr>
 							<tr>
-								<td class='libraryTileCell'>
+								<td class='libraryTileCredits'>
 									<font size='2em'>Hacked By: <b>" . $instHacker . "</b><br />Date:" . $instDate . " </align></font>
 								</td>
 							</tr>
 							<tr>
-								<td class='libraryTileCell'>
+								<td class='libraryTileImage'>
 									<center>" . $instImage . "</center>
 								</td>
 							</tr>
 							<tr>
-								<td class='libraryTileCell'>
-									" . $instDescription . " Read more about " . $instTitle . "
+								<td class='libraryDescription'>
+									" . $instDescription . "<a href='doku.php?id=" . $instPath . "'> Read More...</a>
 								</td>
 							</tr>
 						</table>
