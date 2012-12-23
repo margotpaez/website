@@ -94,7 +94,7 @@ class syntax_plugin_lvhinstructionstep extends DokuWiki_Syntax_Plugin
 						$this->description = $value;
 						break;						
 					case 'image':						
-						$this->image = ops_getImageLink($value);
+						$this->image = lvh_getImageLink($value);
 						break;
 					case 'substep':	
 						$value = p_render('xhtml',p_get_instructions($value));
@@ -157,12 +157,12 @@ class syntax_plugin_lvhinstructionstep extends DokuWiki_Syntax_Plugin
 					$fancyText = "<ul class='subStep'>";
 					foreach($text as $textElem)
 					{
-						$fancyText .= "<li>" . ops_parseWikiSyntax($textElem) . "</li>";
+						$fancyText .= "<li>" . lvh_parseWikiSyntax($textElem) . "</li>";
 						//$fancyText .= "<li>" . p_get_instructions($textElem) . "</li>";
 					}
 					$fancyText .= "</ul>";	
 					
-					$fancyImage = ops_getImageLink($image, $fancyText);
+					$fancyImage = lvh_getImageLink($image, $fancyText);
 										
 					//Add Image
 					$details .= "<tr class='stepDetailRow' style='display: none;'>  

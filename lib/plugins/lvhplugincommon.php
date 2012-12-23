@@ -15,7 +15,7 @@
 	//Dokuwiki Media Manager Fetch URL
 	function lvh_getMediaManagerFetchURL()
 	{
-		return 'http://75.101.137.8/wiki2/lib/exe/fetch.php?media=';
+		return 'http://75.101.137.8/lib/exe/fetch.php?media=';
 	}
 
 	/*************************************************************************************
@@ -28,7 +28,7 @@
 		//Get Common Variables
 		$mediaManagerFetchURL = lvh_getMediaManagerFetchURL();
 		
-		//$mediaManagerFetch = 'http://75.101.137.8/wiki2/lib/exe/fetch.php?media=';
+		//$mediaManagerFetch = 'http://75.101.137.8/lib/exe/fetch.php?media=';
 		
 		//Wiki Format
 		if(preg_match('{{.*?}}', $value) == 1)
@@ -119,6 +119,7 @@
 		$retVal = lvh_parseStyle($value);		//Parse Style Must Be Called Before Parse Links Since Parse Links Will Add HTML Tags That Parse Style Will Destroy.
 		$retVal = lvh_parseLinks($retVal);
 		$retVal = str_replace("\"", "'", $retVal);		//Replace " with ' so that links in detailed text work in image zoom window.
+		//$retval = p_render('xhtml',p_get_instructions($value));
 		return $retVal;
 	}
 	

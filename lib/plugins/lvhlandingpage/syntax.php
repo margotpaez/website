@@ -37,7 +37,7 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 
 	
 	//include 'common.php';	
-	//protected   $imageFetchPath = 'http://75.101.137.8/wiki2/lib/exe/fetch.php?media=';
+	//protected   $imageFetchPath = 'http://75.101.137.8/lib/exe/fetch.php?media=';
 
 	//Set This To True To Enable Debug Strings
 	protected $lvhDebug = false;
@@ -234,16 +234,16 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 								</tr>
 								<tr>
 									<td width='15%'>
-										<p align='center'><a href='doku.php?id=" . $instgettingStartedPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:getting_started_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:getting_started_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:getting_started_black.png'\" /><br />Getting Started </a><br /></p>
+										<p align='center'><a href='doku.php?id=" . $instgettingStartedPath . "'><img src=\"/lib/exe/fetch.php?media=libraries:getting_started_black.png\" onmouseover=\"this.src='/lib/exe/fetch.php?media=libraries:getting_started_green.png'\" onmouseout=\"this.src='/lib/exe/fetch.php?media=libraries:getting_started_black.png'\" /><br />Getting Started </a><br /></p>
 									</td>
 									<td width='15%'>
-										<p align='center'><a href='doku.php?id=" . $insttutorialsPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:tutorials_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:tutorials_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:tutorials_black.png'\" /><br />Tutorials </a><br /></p>
+										<p align='center'><a href='doku.php?id=" . $insttutorialsPath . "'><img src=\"/lib/exe/fetch.php?media=libraries:tutorials_black.png\" onmouseover=\"this.src='/lib/exe/fetch.php?media=libraries:tutorials_green.png'\" onmouseout=\"this.src='/lib/exe/fetch.php?media=libraries:tutorials_black.png'\" /><br />Tutorials </a><br /></p>
 									</td>
 									<td width='15%'>
-										<p align='center'><a href='" . $instforumPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:forums_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:forums_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:forums_black.png'\" /><br />Forums </a><br /></p>
+										<p align='center'><a href='" . $instforumPath . "'><img src=\"/lib/exe/fetch.php?media=libraries:forums_black.png\" onmouseover=\"this.src='/lib/exe/fetch.php?media=libraries:forums_green.png'\" onmouseout=\"this.src='/lib/exe/fetch.php?media=libraries:forums_black.png'\" /><br />Forums </a><br /></p>
 									</td>
 									<td width='15%'>
-										<p align='center'><a href='" . $instgitHubPath . "'><img src=\"/wiki2/lib/exe/fetch.php?media=libraries:github_black.png\" onmouseover=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:github_green.png'\" onmouseout=\"this.src='/wiki2/lib/exe/fetch.php?media=libraries:github_black.png'\" /><br />Git Hub </a><br /></p>
+										<p align='center'><a href='" . $instgitHubPath . "'><img src=\"/lib/exe/fetch.php?media=libraries:github_black.png\" onmouseover=\"this.src='/lib/exe/fetch.php?media=libraries:github_green.png'\" onmouseout=\"this.src='/lib/exe/fetch.php?media=libraries:github_black.png'\" /><br />Git Hub </a><br /></p>
 									</td>
 																							
 								</tr>

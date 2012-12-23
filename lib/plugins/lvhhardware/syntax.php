@@ -205,7 +205,7 @@ class syntax_plugin_lvhhardware extends DokuWiki_Syntax_Plugin
 							<table class='hardware'>
 								<tr>
 									<td>
-										<center><font size='4'><a href='http://ec2-107-21-156-97.compute-1.amazonaws.com/wiki2/doku.php?id=" . $instPage . "'>" . $instName . "</a> </font></center>
+										<center><font size='4'><a href='http://ec2-107-21-156-97.compute-1.amazonaws.com/doku.php?id=" . $instPage . "'>" . $instName . "</a> </font></center>
 									</td>
 								</tr>
 									" . $versionCell . "
