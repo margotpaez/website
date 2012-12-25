@@ -3,6 +3,9 @@
 *
 * LabVIEW Hacker Landing Page Plugin
 *
+* Written By Sammy_K
+* www.labviewhacker.com
+*
 /*******************************************************************************************************************************/
  
 // must be run within DokuWiki

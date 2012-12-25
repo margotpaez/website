@@ -1,0 +1,7 @@
+base lvhcompelectrical
+author Sammy_K
+email 
+date 12-2012
+name LabVIEW Hacker Component Electrical Specs Plugin
+desc LabVIEW Hacker Component Electrical Specs Plugin
+url www.labviewhacker.com

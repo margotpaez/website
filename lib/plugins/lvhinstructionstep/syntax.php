@@ -3,6 +3,9 @@
 *
 * LabVIEW Hacker Instruction Step Template Plugin
 *
+* Written By Sammy_K
+* www.labviewhacker.com
+*
 /*******************************************************************************************************************************/
  
  
@@ -207,21 +210,21 @@ class syntax_plugin_lvhinstructionstep extends DokuWiki_Syntax_Plugin
 			{
 			  case DOKU_LEXER_ENTER : 
 				//Initialize Table	
-				if($this->skDebug) $renderer->doc .= 'ENTER';		//Debug
+				if($this->lvhDebug) $renderer->doc .= 'ENTER';		//Debug
 				
 				//$renderer->doc.= '<HTML><body><table border="0">';
 				break;
 			  case DOKU_LEXER_MATCHED :
 				//Add Table Elements Based On Type
-				if($this->skDebug) $renderer->doc .= 'MATCHED';		//Debug				
+				if($this->lvhDebug) $renderer->doc .= 'MATCHED';		//Debug				
 				break;
 			  case DOKU_LEXER_UNMATCHED :
 				//Ignore
-				if($this->skDebug) $renderer->doc .= 'UNMATCHED';	//Debug
+				if($this->lvhDebug) $renderer->doc .= 'UNMATCHED';	//Debug
 				break;
 			  case DOKU_LEXER_EXIT :
 				//Close Elements
-				if($this->skDebug) $renderer->doc .= 'EXIT';		//Debug
+				if($this->lvhDebug) $renderer->doc .= 'EXIT';		//Debug
 				//$renderer->doc.= '</table></body></HTML>';
 				
 				//Separate Data
@@ -233,19 +236,7 @@ class syntax_plugin_lvhinstructionstep extends DokuWiki_Syntax_Plugin
 				 $instAlign = $data[6];
 				 $instStepNum = $data[7];
 				 $instDetails = $data[8];
-				 $instID = $data[9];
-				 				
-				//Optional Version Cell  (I think this can be removed -sk)
-				$versionCell = '';
-				if($instVersion != '')
-				{
-					$versionCell = 	"<tr class='stepRow'>
-										<td class='stepText'>
-											<center><font size='1'> Version: " . $instVersion . " </font></center>
-										</td>
-									</tr>";
-				}
-				
+				 $instID = $data[9];	
 				
 				$renderer->doc .= "
 					<head>
@@ -396,7 +387,7 @@ class syntax_plugin_lvhinstructionstep extends DokuWiki_Syntax_Plugin
 				break;
 			  case DOKU_LEXER_SPECIAL :
 				//Ignore
-				if($this->skDebug) $renderer->doc .= 'SPECIAL';		//Debug
+				if($this->lvhDebug) $renderer->doc .= 'SPECIAL';		//Debug
 				break;
 			}			
             return true;
