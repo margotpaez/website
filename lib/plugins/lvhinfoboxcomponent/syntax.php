@@ -339,12 +339,18 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 								
 								font-size:.75em;
 							}
+							.infoboxComponentElectricalOuter
+							{ 
+								border:0px;
+								vertical-align:middle;
+								padding:0px;
+							}
 							
 							table.infoboxComponentElectrical
 							{  
 															
-								width:30%;
-								border: 0px solid #BBBBBB;
+								width:100%;
+								border: 0px solid red;
 								border-collapse:collapse;
 
 								background-color: #EEEEEE;								
@@ -352,16 +358,32 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 							}
 							
 							.infoboxComponentElectricalHeader
-							{ 		
+							{ 	
+								border:0px;								
+								vertical-align:middle;
+								padding:2px;
 								
+								font-size:.75em;
+								font-weight:bold;
 							}
 							.infoboxComponentElectricalLabel
 							{ 		
+								width:25%;
 								
+								border:0px;								
+								vertical-align:middle;
+								padding:2px;
+								
+								font-size:.75em;
+								font-weight:bold;
 							}
 							.infoboxComponentElectricalValue
 							{ 		
+								border:0px;
+								vertical-align:middle;
+								padding:2px;
 								
+								font-size:.75em;
 							}
 							
 						</style>
@@ -611,7 +633,7 @@ function parseElectrical($vccMin, $vccTypical, $vccMax, $vccUnits, $iccMin, $icc
 						</td>
 					</tr>
 					<tr>
-						<td colspan='2'>
+						<td class='infoboxComponentElectricalOuter' colspan='2'>
 							<table class='infoboxComponentElectrical'>";
 		
 		//Add Section Labels and Values
@@ -621,60 +643,77 @@ function parseElectrical($vccMin, $vccTypical, $vccMax, $vccUnits, $iccMin, $icc
 		{
 			//Create Vcc Row
 			$retVal .= "<tr>
-							<td class='infoboxComponentLabel'>
+							<td class='infoboxComponentElectricalHeader'>
+								Symbol
+							</td>
+							<td class='infoboxComponentElectricalHeader'>
+								<center>Min</center>
+							</td>
+							<td class='infoboxComponentElectricalHeader'>
+								<center>Typical</center>
+							</td>
+							<td class='infoboxComponentElectricalHeader'>
+								<center>Max</center>
+							</td>
+							<td class='infoboxComponentElectricalHeader'>
+								<center>Units</center>
+							</td>
+						</tr>
+						<tr>
+							<td class='infoboxComponentElectricalLabel'>
 								Vcc
 							</td>";
 			//Add Elements
 			//Vcc Min
 			if($vccMin == '')
 			{
-				$retVal .= "<td class='infoboxComponentValue'>
-								-
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>-</center>
 							</td>";
 			}
 			else
 			{
-				$retVal .= "<td class='infoboxComponentValue'>
-								" . $vccMin . "
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>" . $vccMin . "</center>
 							</td>";
 			}
 			//Vcc Tpyical
 			if($vccTypical == '')
 			{
-				$retVal .= "<td class='infoboxComponentValue'>
-								-
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>-</center>
 							</td>";
 			}
 			else
 			{
-				$retVal .= "<td class='infoboxComponentValue'>
-								" . $vccTypical . "
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>" . $vccTypical . "</center>
 							</td>";
 			}
 			//Vcc Max
 			if($vccMax == '')
 			{
-				$retVal .= "<td  class='infoboxComponentValue'>
-								-
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>-</center>
 							</td>";
 			}
 			else
 			{
-				$retVal .= "<td  class='infoboxComponentValue'>
-								" . $vccMax . "
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>" . $vccMax . "</center>
 							</td>";
 			}
 			//Vcc Units
 			if($vccUnits == '')
 			{
-				$retVal .= "<td  class='infoboxComponentValue'>
-								-
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>-</center>
 							</td>";
 			}
 			else
 			{
-				$retVal .= "<td  class='infoboxComponentValue'>
-								" . $vccUnits . "
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>" . $vccUnits . "</center>
 							</td>";
 			}
 			
