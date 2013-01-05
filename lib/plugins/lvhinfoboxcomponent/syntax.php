@@ -20,6 +20,8 @@ if(!defined('LVH_COMMON'))
 	define('LVH_COMMON', 'lib/plugins/lvhplugincommon.php');
 	include 'lib/plugins/lvhplugincommon.php'; 
 }
+
+
  
 /********************************************************************************************************************************
 * All DokuWiki plugins to extend the parser/rendering mechanism
@@ -27,6 +29,8 @@ if(!defined('LVH_COMMON'))
 ********************************************************************************************************************************/
 class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin 
 {
+	
+	
 	//Return Plugin Info
 	function getInfo() 
 	{
@@ -43,6 +47,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 	
 	//Store Variables To Render
 	protected $name = '';	
+	protected $category = '';	
 	protected $image = '';
 	protected $manufacturer = '';
 	
@@ -85,7 +90,10 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				{
 					case 'name':						
 						$this->name = $value;
-						break;		
+						break;	
+					case 'category':
+						$this->category = $value;
+						break;
 					case 'image':						
 						$this->image = lvh_getImageLink($value);
 						break;
@@ -100,7 +108,10 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 			case DOKU_LEXER_UNMATCHED :
 				break;
 			case DOKU_LEXER_EXIT :
-				$retVal = array($state, $this->name, $this->image, $this->manufacturer);
+			
+				$basics = parseBasics($this->name, $this->category, $this->image);
+				$productionHistory = parseProductionHistory($this->manufacturer);
+				$retVal = array($state, $basics, $productionHistory);
 					//Clear Variables Thta Will Be Resused Here If Neccissary (might not be needed in this plugin)
 				return $retVal;
 				break;
@@ -109,6 +120,10 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 		}			
 		return array($state, $match);
     }
+	
+	
+	
+	
  
 	/********************************************************************************************************************************************
 	** Render
@@ -141,9 +156,8 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				//$renderer->doc.= '</table></body></HTML>';
 				
 				//Separate Data
-				 $instName = $data[1];				 
-				 $instImage = $data[2];
-				 $instManufacturer = $data[3];
+				 $instBasics = $data[1];	
+				 $instProductionHistory = $data[2];
 				
 				$renderer->doc .= "
 					<head>
@@ -217,34 +231,9 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 					</head>
 
 					<body>
-						<table class='infoboxComponentOuterTable'>
-							<tr>
-								<td class='infoboxComponentName' colspan='2'>
-									<center>" . $instName . "</center>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<table class='infoboxComponentInnerTable'>
-										
-										<tr>
-											<td class='infoboxComponentImage' colspan='2'>
-												<center>" . $instImage . "</center>
-											</td>
-										</tr>
-										<tr>
-											<td class='infoboxComponentSectionHeader' colspan='2'>
-												<center>Production History</center>
-											</td>
-										</tr>
-										<tr>
-											<td class='infoboxComponentLabel'>
-												Manufacturer
-											</td>
-											<td class='infoboxComponentValue'>
-												" . $instManufacturer . "
-											</td>
-										</tr>
+						" . $instBasics 				
+						 . $instProductionHistory . "
+						  
 									</table>
 								</td>
 							</tr>
@@ -263,4 +252,84 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
         return false;
     }
 }
+
+function parseBasics($name, $category, $image)
+{
+	$retVal = "<table class='infoboxComponentOuterTable'>";
 	
+	$name = trim($name);
+	$category = trim($category);
+	$image = trim($image);
+	
+	if( ($name == '') && ($category == '') && ($image == '') )
+	{
+		//This Section Contains No Data - Nothing To Render
+		return '';
+	}
+	else
+	{
+		//This Section Contains Data.  Add Each Element With Data
+		//Add Name And Open Inner Table (Infoboxes Should Always Have A Name)
+		if($name != '')
+		{
+			$retVal .=	"<tr>
+							<td class='infoboxComponentName' colspan='2'>
+								<center>" . $name . "</center>
+							</td>
+						</tr>
+						<tr>
+							<td>
+							<table class='infoboxComponentInnerTable'>";
+		}
+		//Add Image
+		if($image != '')
+		{
+			$retVal .= "<tr>
+							<td class='infoboxComponentImage' colspan='2'>
+								<center>" . $image . "</center>
+							</td>
+						</tr>";
+		}
+		
+		return $retVal;
+	}
+}
+
+function parseProductionHistory($manufacturer)
+{
+	$retVal = '';
+	
+	$manufacturer = trim($manufacturer);
+	
+	if($manufacturer == '')
+	{
+		//This Section Contains No Data - Nothing To Render
+		return $retVal;
+	}
+	else
+	{
+		//Section Contains Data.  Add Section Header
+		$retVal .= "<tr>
+						<td class='infoboxComponentSectionHeader' colspan='2'>
+							<center>Production History</center>
+						</td>
+					</tr>";
+		
+		//Add Section Labels and Values
+		
+		//Add Manufacturer Label / Value (If It Exists)
+		if($manufacturer != '')
+		{
+			$retVal .=	 "<tr>
+							<td class='infoboxComponentLabel'>
+								Manufacturer
+							</td>
+							<td class='infoboxComponentValue'>
+								" . $manufacturer . "
+							</td>
+						</tr>";
+		}
+		
+		return $retVal;
+	}
+}
