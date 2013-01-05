@@ -54,6 +54,15 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 	//Product History
 	protected $manufacturer = '';
 	
+	//General Specs
+	protected $width = '';
+	protected $depth = '';
+	protected $height = '';
+	protected $pins = '';
+		
+	//Electrical
+	
+	
 	/********************************************************************************************************************************************
 	** Plugin Configuration
 	********************************************************************************************************************************************/			
@@ -105,7 +114,23 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 					//Product History
 					case 'manufacturer':						
 						$this->manufacturer = lvh_allowSimpleWikiSyntax($value);
-						break;					
+						break;
+
+					//General Specs
+					case 'width':						
+						$this->width = $value;
+						break;
+					case 'depth':						
+						$this->depth = $value;
+						break;
+					case 'height':						
+						$this->height = $value;
+						break;
+					case 'pins':						
+						$this->pins = $value;
+						break;
+						
+					//Default
 					default:
 						break;
 				}
@@ -117,7 +142,8 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 			
 				$basics = parseBasics($this->name, $this->category, $this->image);
 				$productHistory = parseProductHistory($this->manufacturer);
-				$retVal = array($state, $basics, $productHistory);
+				$generalSpecs = parseGeneralSpecs($this->width, $this->depth, $this->height, $this->pins);
+				$retVal = array($state, $basics, $productHistory, $generalSpecs);
 					//Clear Variables Thta Will Be Resused Here If Neccissary (might not be needed in this plugin)
 				return $retVal;
 				break;
@@ -164,6 +190,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				//Separate Data
 				 $instBasics = $data[1];	
 				 $instProductHistory = $data[2];
+				 $instGeneralSpecs = $data[3];
 				
 				$renderer->doc .= "
 					<head>
@@ -243,7 +270,8 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 
 					<body>
 						" . $instBasics 				
-						 . $instProductHistory . "
+						  . $instProductHistory
+						  . $instGeneralSpecs . "
 						  
 									</table>
 								</td>
@@ -349,6 +377,77 @@ function parseProductHistory($manufacturer)
 							</td>
 							<td class='infoboxComponentValue'>
 								" . $manufacturer . "
+							</td>
+						</tr>";
+		}
+		
+		return $retVal;
+	}
+}
+
+function parseGeneralSpecs($width, $depth, $height, $pins)
+{
+	$retVal = '';
+	
+	$width = trim($width);
+	$depth = trim($depth);
+	$height = trim($height);
+	$pins = trim($pins);
+	
+	if( ($width == '') && ($height == '') && ($pins == '') )
+	{
+		//This Section Contains No Data - Nothing To Render
+		return $retVal;
+	}
+	else
+	{
+		//Section Contains Data.  Add Section Header
+		$retVal .= "<tr>
+						<td class='infoboxComponentSectionHeader' colspan='2'>
+							<center>General Specifications</center>
+						</td>
+					</tr>
+					<tr>
+							<td class='infoboxComponentLabel'>
+								Size (W, D, H)
+							</td>
+							<td class='infoboxComponentValue'>";
+		//Add Width
+		if($width != '')
+		{
+			$retVal .= $width . " X ";
+		}
+		else
+		{
+			$retVal .= "- X ";
+		}
+		//Add Depth
+		if($depth != '')
+		{
+			$retVal .= $depth . " X ";
+		}
+		else
+		{
+			$retVal .= "- X ";
+		}
+		//Add Height
+		if($height != '')
+		{
+			$retVal .= $height;
+		}
+		else
+		{
+			$retVal .= "-";
+		}
+		//Add Pins
+		if($width != '')
+		{
+			$retVal .= "<tr>
+							<td class='infoboxComponentLabel'>
+								Pins
+							</td>
+							<td class='infoboxComponentValue'>
+								" . $pins . "
 							</td>
 						</tr>";
 		}
