@@ -45,10 +45,13 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 	//Set This To True To Enable Debug Strings
 	protected $lvhDebug = false;
 	
-	//Store Variables To Render
+	//Store Variables To Render	
+	//Basics
 	protected $name = '';	
-	protected $category = '';	
+	protected $category = '';		
 	protected $image = '';
+
+	//Product History
 	protected $manufacturer = '';
 	
 	/********************************************************************************************************************************************
@@ -88,17 +91,20 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				$value = substr($match, ($tokenDiv + 1));						//Everything after '='
 				switch($token)
 				{
+					//Basics
 					case 'name':						
 						$this->name = $value;
 						break;	
 					case 'category':
-						$this->category = $value;
+						$this->category = lvh_allowSimpleWikiSyntax($value);
 						break;
 					case 'image':						
 						$this->image = lvh_getImageLink($value);
 						break;
+						
+					//Product History
 					case 'manufacturer':						
-						$this->manufacturer = $value;
+						$this->manufacturer = lvh_allowSimpleWikiSyntax($value);
 						break;					
 					default:
 						break;
@@ -110,8 +116,8 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 			case DOKU_LEXER_EXIT :
 			
 				$basics = parseBasics($this->name, $this->category, $this->image);
-				$productionHistory = parseProductionHistory($this->manufacturer);
-				$retVal = array($state, $basics, $productionHistory);
+				$productHistory = parseProductHistory($this->manufacturer);
+				$retVal = array($state, $basics, $productHistory);
 					//Clear Variables Thta Will Be Resused Here If Neccissary (might not be needed in this plugin)
 				return $retVal;
 				break;
@@ -157,7 +163,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				
 				//Separate Data
 				 $instBasics = $data[1];	
-				 $instProductionHistory = $data[2];
+				 $instProductHistory = $data[2];
 				
 				$renderer->doc .= "
 					<head>
@@ -175,6 +181,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 								background-color: #EEEEEE;								
 								background-color: #EEEEEE;								
 							}
+							
 							.infoboxComponentName 
 							{ 		
 								border-top: 0px;
@@ -186,6 +193,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 								font-weight:bold;
 								font-size:1em;
 							}
+							
 							table.infoboxComponentInnerTable
 							{  
 								width:100%;
@@ -193,37 +201,40 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 								border-color:#BBBBBB;
 								background-color: #EEEEEE;	
 							}
+							
 							.infoboxComponentImage
 							{ 	
 								border:0px solid;
+								padding:10px;
 							} 
-							
 							
 							.infoboxComponentSectionHeader
 							{ 
 								vertical-align:middle;
-								background-color: #BBBBBB;									
+								background-color: #BBBBBB;	
 								padding:0px;
 								
 								font-size:.85em;
 								font-weight:bold;
 							}
+							
 							.infoboxComponentLabel
 							{ 
 								width:35%;
 								
 								border:0px;								
 								vertical-align:middle;
-								padding:0px;
+								padding:2px;
 								
 								font-size:.75em;
 								font-weight:bold;
 							}
+							
 							.infoboxComponentValue
 							{ 
 								border:0px;
 								vertical-align:middle;
-								padding:0px;
+								padding:2px;
 								
 								font-size:.75em;
 							}
@@ -232,7 +243,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 
 					<body>
 						" . $instBasics 				
-						 . $instProductionHistory . "
+						 . $instProductHistory . "
 						  
 									</table>
 								</td>
@@ -290,12 +301,24 @@ function parseBasics($name, $category, $image)
 							</td>
 						</tr>";
 		}
+		//Add Category
+		if($category != '')
+		{
+			$retVal .= "<tr>
+							<td class='infoboxComponentLabel'>
+								Category
+							</td>
+							<td class='infoboxComponentValue'>
+								" . $category . "
+							</td>
+						</tr>";
+		}
 		
 		return $retVal;
 	}
 }
 
-function parseProductionHistory($manufacturer)
+function parseProductHistory($manufacturer)
 {
 	$retVal = '';
 	
@@ -311,7 +334,7 @@ function parseProductionHistory($manufacturer)
 		//Section Contains Data.  Add Section Header
 		$retVal .= "<tr>
 						<td class='infoboxComponentSectionHeader' colspan='2'>
-							<center>Production History</center>
+							<center>Product History</center>
 						</td>
 					</tr>";
 		
@@ -320,7 +343,7 @@ function parseProductionHistory($manufacturer)
 		//Add Manufacturer Label / Value (If It Exists)
 		if($manufacturer != '')
 		{
-			$retVal .=	 "<tr>
+			$retVal .= "<tr>
 							<td class='infoboxComponentLabel'>
 								Manufacturer
 							</td>

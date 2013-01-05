@@ -17,6 +17,13 @@
 	{
 		return 'http://75.101.137.8/lib/exe/fetch.php?media=';
 	}
+	
+	//Allow Simple Wiki Syntax (Strips <p> tags)
+	function lvh_allowSimpleWikiSyntax($value)
+	{
+		$retVal = str_replace( '<p>', '', (p_render('xhtml',p_get_instructions($value))) );
+		return str_replace('</p>', '', $retVal);
+	}
 
 	/*************************************************************************************
 	** Image URLS
