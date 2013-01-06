@@ -58,7 +58,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 	protected $width = '';
 	protected $depth = '';
 	protected $height = '';
-	protected $pins = '';
+	protected $numPins = '';
 		
 	//Electrical
 	protected $vccMin = '';			//VCC
@@ -77,6 +77,9 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 	protected $llTypical = '';
 	protected $llMax = '';
 	protected $llUnits = '';
+	
+	//Pins
+	protected $pins = array();
 	
 
 	
@@ -144,7 +147,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 						$this->height = $value;
 						break;
 					case 'pins':						
-						$this->pins = $value;
+						$this->numPins = $value;
 						break;
 						
 					//Electrical
@@ -197,6 +200,16 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 						$this->llUnits = $value;
 						break;
 						
+					//Pins
+					case (preg_match('/pin [0-9]*/', $token, $pinMatches)? true : false ) :								
+						//Loop Through All Matches (should just be 1) Populate Pins Variable With Pin Value
+						foreach($pinMatches as $match)
+						{
+							$pinNum = substr( trim($match), 4);
+							$this->pins[$pinNum] = $value;
+						}						
+						break;
+						
 					//Default
 					default:
 						break;
@@ -210,13 +223,14 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				//Generate HTML For Infobox SubComponents
 				$basics = parseBasics($this->name, $this->category, $this->image);
 				$productHistory = parseProductHistory($this->manufacturer);
-				$generalSpecs = parseGeneralSpecs($this->width, $this->depth, $this->height, $this->pins);
+				$generalSpecs = parseGeneralSpecs($this->width, $this->depth, $this->height, $this->numPins);
 				$electrical = parseElectrical($this->vccMin, $this->vccTypical, $this->vccMax, $this->vccUnits, $this->iccMin, 
 											  $this->iccTypical, $this->iccMax, $this->iccUnits, $this->powerMin, $this->vTypical, 
 											  $this->powerMax, $this->powerUnits, $this->llMin, $this->llTypical, $this->llMax, 
 											  $this->llUnits);
+				$pinout = parsePinout($this->pins);
 											  
-				$retVal = array($state, $basics, $productHistory, $generalSpecs, $electrical);
+				$retVal = array($state, $basics, $productHistory, $generalSpecs, $electrical, $pinout);
 					//Clear Variables Thta Will Be Resused Here If Neccissary (might not be needed in this plugin)
 				return $retVal;
 				break;
@@ -224,11 +238,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				break;
 		}			
 		return array($state, $match);
-    }
-	
-	
-	
-	
+    }	
  
 	/********************************************************************************************************************************************
 	** Render
@@ -265,6 +275,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				 $instProductHistory = $data[2];
 				 $instGeneralSpecs = $data[3];
 				 $instElectrical = $data[4];
+				 $instPinout = $data[5];
 				
 				$renderer->doc .= "
 					<head>
@@ -274,7 +285,8 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 							{  
 								float:right;
 								margin:10px;								
-								width:30%;
+								width:33%;
+								margin: 0 0 0 0;
 								
 								border: 0px solid #BBBBBB;
 								border-collapse:collapse;
@@ -301,6 +313,8 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 								border:0px solid;
 								border-color:#BBBBBB;
 								background-color: #EEEEEE;	
+								margin: 0 0 0 0;
+								
 							}
 							
 							.infoboxComponentImage
@@ -321,9 +335,9 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 							
 							.infoboxComponentLabel
 							{ 
-								width:35%;
+								width:30%;
 								
-								border:0px;								
+								border:0px solid blue;								
 								vertical-align:middle;
 								padding:2px;
 								
@@ -339,23 +353,22 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 								
 								font-size:.75em;
 							}
+							
 							.infoboxComponentElectricalOuter
 							{ 
-								border:0px;
-								vertical-align:middle;
+								border:0px solid green;
 								padding:0px;
-							}
+							}							
 							
 							table.infoboxComponentElectrical
 							{  
 															
 								width:100%;
 								border: 0px solid red;
-								border-collapse:collapse;
-
+								margin: 0 0 0 0;
+											
 								background-color: #EEEEEE;								
-								background-color: #EEEEEE;								
-							}
+							}							
 							
 							.infoboxComponentElectricalHeader
 							{ 	
@@ -368,7 +381,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 							}
 							.infoboxComponentElectricalLabel
 							{ 		
-								width:25%;
+								width:30%;
 								
 								border:0px;								
 								vertical-align:middle;
@@ -379,7 +392,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 							}
 							.infoboxComponentElectricalValue
 							{ 		
-								border:0px;
+								border:0px solid red;
 								vertical-align:middle;
 								padding:2px;
 								
@@ -393,7 +406,8 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 						" . $instBasics 				
 						  . $instProductHistory
 						  . $instGeneralSpecs 
-						  . $instElectrical . "
+						  . $instElectrical
+						  . $instPinout . "
 						  
 									</table>
 								</td>
@@ -576,8 +590,12 @@ function parseGeneralSpecs($width, $depth, $height, $pins)
 		{
 			$retVal .= "-";
 		}
+		
+		//Close Size Row
+		$retVal .= "</tr>";
+		
 		//Add Pins
-		if($width != '')
+		if($pins != '')
 		{
 			$retVal .= "<tr>
 							<td class='infoboxComponentLabel'>
@@ -587,8 +605,7 @@ function parseGeneralSpecs($width, $depth, $height, $pins)
 								" . $pins . "
 							</td>
 						</tr>";
-		}
-		
+		}		
 		return $retVal;
 	}
 }
@@ -619,7 +636,7 @@ function parseElectrical($vccMin, $vccTypical, $vccMax, $vccUnits, $iccMin, $icc
 	$llMax = trim($llMax); 
 	$llUnits = trim($llUnits); 
 	
-	if( $vccMin == '' && $vccTypical == '' && $vccMax == '' && $vccUnits == '' && $iccMin == '' && $iccTypical == '' && $iccMax == '' && $iccUnits == '' && $powerMin == '' && $vTypical == '' && $powerMax == '' && $powerUnits == '' && $llMin == '' && $llTypical == '' && $llMax == '' && $llUnits)
+	if( $vccMin == '' && $vccTypical == '' && $vccMax == '' && $vccUnits == '' && $iccMin == '' && $iccTypical == '' && $iccMax == '' && $iccUnits == '' && $powerMin == '' && $vTypical == '' && $powerMax == '' && $powerUnits == '' && $llMin == '' && $llTypical == '' && $llMax == '' && $llUnits =='')
 	{
 		//This Section Contains No Data - Nothing To Render
 		return $retVal;
@@ -641,7 +658,7 @@ function parseElectrical($vccMin, $vccTypical, $vccMax, $vccUnits, $iccMin, $icc
 		//Add Vcc If It Exists
 		if($vccMin != '' || $vccTypical != '' || $vccMax != '' || $vccUnits != '')
 		{
-			//Create Vcc Row
+			//Add Electrical Table Header Row
 			$retVal .= "<tr>
 							<td class='infoboxComponentElectricalHeader'>
 								Symbol
@@ -718,12 +735,283 @@ function parseElectrical($vccMin, $vccTypical, $vccMax, $vccUnits, $iccMin, $icc
 			}
 			
 			//Close Vcc Row
-			$retVal .= "</tr></table>";
+			$retVal .= "</tr>";
 		}
 		
-		//Close Electrical Table
-		$retVal .= "</td></tr>";
+		//Add Icc If It Exists
+		if($iccMin != '' || $iccTypical != '' || $iccMax != '' || $iccUnits != '')
+		{
+			//Create icc Row
+			$retVal .= "<tr>
+							<td class='infoboxComponentElectricalLabel'>
+								Icc
+							</td>";
+			//Add Elements
+			//icc Min
+			if($iccMin == '')
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>" . $iccMin . "</center>
+							</td>";
+			}
+			//icc Tpyical
+			if($iccTypical == '')
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>" . $iccTypical . "</center>
+							</td>";
+			}
+			//icc Max
+			if($iccMax == '')
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>" . $iccMax . "</center>
+							</td>";
+			}
+			//icc Units
+			if($iccUnits == '')
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'> 
+								<center>" . $iccUnits . "</center>
+							</td>";
+			}
+			
+			//Close icc Row
+			$retVal .= "</tr>";
+		}
+		
+		//Add power If It Exists
+		if($powerMin != '' || $powerTypical != '' || $powerMax != '' || $powerUnits != '')
+		{
+			//Create power Row
+			$retVal .= "<tr>
+							<td class='infoboxComponentElectricalLabel'>
+								Power
+							</td>";
+			//Add Elements
+			//power Min
+			if($powerMin == '')
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>" . $powerMin . "</center>
+							</td>";
+			}
+			//power Tpyical
+			if($powerTypical == '')
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>" . $powerTypical . "</center>
+							</td>";
+			}
+			//power Max
+			if($powerMax == '')
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>" . $powerMax . "</center>
+							</td>";
+			}
+			//power Units
+			if($powerUnits == '')
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'> 
+								<center>" . $powerUnits . "</center>
+							</td>";
+			}
+			
+			//Close power Row
+			$retVal .= "</tr>";
+		}
+		
+		//Add Logic Level If It Exists
+		if($llMin != '' || $llTypical != '' || $llMax != '' || $llUnits != '')
+		{
+			//Create Logic Level Row
+			$retVal .= "<tr>
+							<td class='infoboxComponentElectricalLabel'>
+								Logic Level
+							</td>";
+			//Add Elements
+			//Logic Level Min
+			if($llMin == '')
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>" . $llMin . "</center>
+							</td>";
+			}
+			//Logic Level Tpyical
+			if($llTypical == '')
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td class='infoboxComponentElectricalValue'>
+								<center>" . $llTypical . "</center>
+							</td>";
+			}
+			//Logic Level Max
+			if($llMax == '')
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>" . $llMax . "</center>
+							</td>";
+			}
+			//Logic Level Units
+			if($llUnits == '')
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'>
+								<center>-</center>
+							</td>";
+			}
+			else
+			{
+				$retVal .= "<td  class='infoboxComponentElectricalValue'> 
+								<center>" . $llUnits . "</center>
+							</td>";
+			}
+			
+			//Close Logic Level Row
+			$retVal .= "</tr>";
+		}
+		//Close Cell And Row Containing Electrical Table Then Close Electrical Table
+		$retVal .= "</td></tr></table>";
 		
 		return $retVal;
 	}
+}
+
+/********************************************************************************************************************************
+* parsePinout()
+*
+* Generate Infobox HTML Based On User Specified Values
+********************************************************************************************************************************/
+function parsePinout($pins)
+{
+	$retVal = "";
+	
+	//Create A Pin Entry For Every Pin Up To The Highest Pin Number Specified
+	$pinCount = max(array_keys($pins));
+	
+	//Impose Arbirarty Limit Of 256 Pins
+	if($pinCount > 256)
+	{
+		return "<tr>
+					<td class='infoboxComponentSectionHeader' colspan='2'>
+						<center>Pinout</center>
+					</td>
+				</tr>
+				<tr>
+					<td class='infoboxComponentLabel' colspan='2'>
+						Too Many Pins (256 Max)
+					</td>
+				</tr>";
+	}
+		
+	//If No Pins Exist Skip Pinout Section
+	if(count($pins) <= 0)
+	{
+		return '';
+	}
+	else
+	{
+		//Pins Exist, Add Pinout Section Header
+		$retVal .= "<tr>
+						<td class='infoboxComponentSectionHeader' colspan='2'>
+							<center>Pinout</center>
+						</td>
+					</tr>";	
+	
+		//Add Row For Each Pin (Up To Max Pin Number
+		for($i=0; $i<=max(array_keys($pins)); $i++)
+		{
+			//If Pin Value Is Not Specified Add Row With '-'
+			if(trim($pins[$i]) == '')
+			{
+				$retVal .= "<tr>
+							<td class='infoboxComponentLabel'>
+								Pin " . $i . "
+							</td>
+							<td class='infoboxComponentValue'>
+								-
+							</td>
+						<tr>";
+			}
+			//Pin Value Specified, Add Pin Row With Specified Value
+			else
+			{
+				//Add Pin Row
+				$retVal .= "<tr>
+								<td class='infoboxComponentLabel'>
+									Pin " . $i . "
+								</td>
+								<td class='infoboxComponentValue'>
+									" . $pins[$i] . "
+								</td>
+							<tr>";
+			}
+		}
+	}
+	return $retVal;
 }
