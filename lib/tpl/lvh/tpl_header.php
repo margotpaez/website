@@ -114,43 +114,56 @@ if (!defined('DOKU_INC')) die();
 
 <!-- Added By SK - LabVIEW Hacker Logo -->
 <div id='siteLogo'>	
-	<img src='/wiki2/lib/tpl/lvh/images/LabVIEWHacker.png'>
+	<img src='/lib/tpl/lvh/images/LabVIEWHacker.png'>
 	<br /><br />
 </div>
 
 <!-- Added By SK - Site Top Navigation -->
-<link href="/menu_assets/styles.css" rel="stylesheet" type="text/css">
+<link href="/menu_assets/styles.css" rel="stylesheet" type="text/css"> 
 
 <!--******** Added By SK - Navbar Menu ********-->		
 	<div id='cssmenu'>
 <ul>
-   <li><a href='/wiki2/'><span>Home</span></a></li>
-   <li class='has-sub '><a href='/wiki2/doku.php?id=libraries:libraries'><span>Libraries</span></a>
+   <li><a href='/'><span>Home</span></a></li>
+   <li class='has-sub '><a href='/doku.php?id=libraries:libraries'><span>Libraries</span></a>
       <ul>
-		 <li><a href='/wiki2/doku.php?id=libraries:ardrone:ardrone'><span>AR.Drone</span></a></li>
-         <li><a href='/wiki2/doku.php?id=libraries:lifa:lifa'><span>Arduino</span></a></li>
+		 <li><a href='/doku.php?id=libraries:ardrone:ardrone'><span>AR.Drone</span></a></li>
+         <li><a href='/doku.php?id=libraries:lifa:lifa'><span>Arduino</span></a></li>
+      </ul>
+   </li>   
+   
+   <li class='has-sub '><a href='/doku.php?id=projects:projects'><span>Projects</span></a>
+      <ul>
+         <li><a href='/doku.php?id=projects:lv_android_interface:lv_android_interface'><span>LabVIEW Android Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_ez430_interface:lv_ez430_interface'><span>LabVIEW EZ430-Chronos Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_epoc_interface:lv_epoc_interface'><span>LabVIEW Emotiv Epoc Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_irobot_create_interface:lv_irobot_create_interface'><span>LabVIEW iRobot Create Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_kinect_interface:lv_kinect_interface'><span>LabVIEW Kinect Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_leap_interface:lv_leap_interface'><span>LabVIEW Leap Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_neatolds_interface:lv_neatolds_interface'><span>LabVIEW Neato LDS Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_twitter_interface:lv_twitter_interface'><span>LabVIEW Twitter Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_mindshark:lv_mindshark'><span>LabVIEW MindShark</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_wiimote_interface:lv_wiimote_interface'><span>LabVIEW Wiimote Interface</span></a></li>
       </ul>
    </li>
-   <li class='has-sub '><a href='/wiki2/doku.php?id=learn:learn'><span>Learn</span></a>
-      <ul>
-         <li><a href='/wiki2/doku.php?id=learn:hardware:hardware'><span>Hardware</span></a></li>
-         <li><a href='/wiki2/doku.php?id=learn:software:software'><span>Software</span></a></li>
-      </ul>
+   
+   <!-- Learn -->
+	<li class='has-sub '><a href=''><span>Learn</span></a>
+		<ul>
+			<li><a href='/doku.php?id=learn:tutorials:software:github:getting_started'><span>GitHub</span></a></li>
+		</ul>
    </li>
-   <li class='has-sub '><a href='/wiki2/doku.php?id=projects:projects'><span>Projects</span></a>
-      <ul>
-         <li><a href='/wiki2/doku.php?id=projects:lv_android_interface:lv_android_interface'><span>LabVIEW Android Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_ardrone_interface_lv_ardrone_interface'><span>LabVIEW AR.Drone Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_ez430_interface:lv_ez430_interface'><span>LabVIEW EZ430-Chronos Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_epoc_interface:lv_epoc_interface'><span>LabVIEW Emotiv Epoc Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_irobot_create_interface:lv_irobot_create_interface'><span>LabVIEW iRobot Create Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_kinect_interface:lv_kinect_interface'><span>LabVIEW Kinect Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_leap_interface:lv_leap_interface'><span>LabVIEW Leap Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_neatolds_interface:lv_neatolds_interface'><span>LabVIEW Neato LDS Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_twitter_interface:lv_twitter_interface'><span>LabVIEW Twitter Interface</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_mindshark:lv_mindshark'><span>LabVIEW MindShark</span></a></li>
-		 <li><a href='/wiki2/doku.php?id=projects:lv_wiimote_interface:lv_wiimote_interface'><span>LabVIEW Wiimote Interface</span></a></li>
-      </ul>
+   
+   <!-- Learn With Deeper Nesting
+	<li class='has-sub '><a href=''><span>Learn</span></a>
+		<ul>
+			<li class='has-sub '><a href=''><span>GitHub</span></a>
+				<ul>
+					<li><a href='/doku.php?id=learn:tutorials:software:github:getting_started'><span>Getting Started with GitHub</span></a></li>   
+				</ul>
+			</li>
+		</ul>
    </li>
+   -->
 </ul>
 </div>

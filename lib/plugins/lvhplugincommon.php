@@ -15,7 +15,7 @@
 	//Dokuwiki Media Manager Fetch URL
 	function lvh_getMediaManagerFetchURL()
 	{
-		return 'http://75.101.137.8/lib/exe/fetch.php?media=';
+		return 'http://labviewhacker.com/lib/exe/fetch.php?media=';
 	}
 	
 	//Allow Simple Wiki Syntax (Strips <p> tags)
