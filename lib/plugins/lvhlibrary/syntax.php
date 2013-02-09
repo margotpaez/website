@@ -96,10 +96,10 @@ class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin
 						$this->path = $value;
 						break;						
 					case 'image':						
-						$this->image = lvh_getImageLink($value);
+						$this->image = lvh_allowSimpleWikiSyntax($value);
 						break;
 					case 'description':						
-						$this->description = $value;
+						$this->description = lvh_allowSimpleWikiSyntax($value);
 						break;	
 					case 'date':						
 						$this->date = $value;
@@ -195,7 +195,7 @@ class syntax_plugin_lvhlibrary extends DokuWiki_Syntax_Plugin
 							{ 
 								border:0px;							
 								vertical-align:middle;	
-								height:175px;
+								height:225px;
 							}
 							.libraryDescription
 							{ 

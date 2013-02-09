@@ -52,6 +52,7 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 	protected	$shortName = '';
 	protected	$description = '';
 	protected	$logoPath = '';
+	protected   $downloadURL = '';
 	protected	$gettingStartedPath = '';
 	protected	$tutorialsPath = '';
 	protected	$forumPath = '';
@@ -91,7 +92,7 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 				//Find The Token And Value (Before '=' remove white space, convert to lower case).
 				$tokenDiv = strpos($match, '=');								//Find Token Value Divider ('=')
 				$token = strtolower(trim(substr($match, 1, ($tokenDiv - 1))));	//Everything Before '=', Remove White Space, Convert To Lower Case
-				$value = substr($match, ($tokenDiv + 1));						//Everything after '='
+				$value = trim(substr($match, ($tokenDiv + 1)));						//Everything after '='
 				switch($token)
 				{
 					case 'full name':						
@@ -138,7 +139,10 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 						break;	
 					case 'getting started':						
 						$this->gettingStarted = $value;
-						break;							
+						break;
+					case 'download url':
+						$this->downloadURL = lvh_forceExternalLink($value);
+						break;
 					default:
 						break;
 				}
@@ -146,7 +150,7 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 			case DOKU_LEXER_UNMATCHED :
 				break;
 			case DOKU_LEXER_EXIT :
-				return array($state, $this->fullName, $this->shortName, $this->description, $this->logoPath, $this->gettingStartedPath, $this->tutorialsPath, $this->forumPath, $this->gitHubPath, $this->howItWorks, $this->howItWorksPath, $this->exploreFeatures, $this->exploreFeaturesPath, $this->seeItInAction, $this->seeItInActionPath, $this->gettingStarted);
+				return array($state, $this->fullName, $this->shortName, $this->description, $this->logoPath, $this->gettingStartedPath, $this->tutorialsPath, $this->forumPath, $this->gitHubPath, $this->howItWorks, $this->howItWorksPath, $this->exploreFeatures, $this->exploreFeaturesPath, $this->seeItInAction, $this->seeItInActionPath, $this->gettingStarted, $this->downloadURL);
 				break;
 			case DOKU_LEXER_SPECIAL :
 				break;
@@ -202,7 +206,8 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 				$instexploreFeaturesPath = $data[12];
 				$instseeItInAction = $data[13];
 				$instseeItInActionPath = $data[14];
-				$instgettingStarted = $data[15];		
+				$instgettingStarted = $data[15];
+				$isntDownloadURL = $data[16];
 				
 				$renderer->doc .= "
 					<HTML>
@@ -221,7 +226,11 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 							<table class='productPage productPage-head'>
 								<tr>
 									<td>
+									
+										<!-- This Title Was Removed So A Wiki Page Title Could Be Included To Generate A Page Name 
 										<h1> " . $instfullName . " </h1>	
+										-->
+										
 									</td>  					
 								</tr>								
 							</table>
@@ -231,8 +240,12 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 									<td colspan='4'>
 										" . $instdescription . " <br />
 									</td>
-									<td rowspan=\"2\">
-										<p align='center'><img src='" . $instlogoPath . "' width='60%' height='60%'> </p>
+									<td rowspan=\"2\">									
+										<p align='center'>
+											<a href='" . $isntDownloadURL . "'><img src='" . DOKU_BASE . "lib/plugins/lvhdownloadbutton/DownloadButton.png'></a>
+											<br /><br />
+											<img src='" . $instlogoPath . "' width='60%' height='60%'> 
+										</p>
 									</td>	
 								</tr>
 								<tr>

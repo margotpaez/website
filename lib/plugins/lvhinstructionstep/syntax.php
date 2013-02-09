@@ -160,8 +160,9 @@ class syntax_plugin_lvhinstructionstep extends DokuWiki_Syntax_Plugin
 					$fancyText = "<ul class='subStep'>";
 					foreach($text as $textElem)
 					{
-						$fancyText .= "<li>" . lvh_parseWikiSyntax($textElem) . "</li>";
-						//$fancyText .= "<li>" . p_get_instructions($textElem) . "</li>";
+						//$fancyText .= "<li>" . lvh_parseWikiSyntax($textElem) . "</li>";
+						$fancyText .= "<li>" . str_replace("\"", "'", lvh_allowSimpleWikiSyntax($textElem)) . "</li>";
+						//$retVal = str_replace("\"", "'", $retVal);		//Replace " with ' so that links in detailed text work in image zoom window.
 					}
 					$fancyText .= "</ul>";	
 					

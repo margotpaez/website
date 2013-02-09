@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************************************************************
 *
-* LabVIEW Hacker Hardware Tile Template Plugin
+* LabVIEW Hacker Download Button Plugin
 *
 * Written By Sammy_K
 * www.labviewhacker.com
@@ -26,7 +26,7 @@ if(!defined('LVH_COMMON'))
 * All DokuWiki plugins to extend the parser/rendering mechanism
 * need to inherit from this class
 ********************************************************************************************************************************/
-class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin 
+class syntax_plugin_lvhdownloadbutton extends DokuWiki_Syntax_Plugin 
 {
 
 	//Return Plugin Info
@@ -34,9 +34,9 @@ class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin
 	{
         return array('author' => 'Sammy_K',
                      'email'  => 'sammyk.labviewhacker@gmail.com',
-                     'date'   => '2012-12-21',
-                     'name'   => 'LabVIEW Hacker Feature Template Plugin',
-                     'desc'   => 'Template for LabVIEW Hacker Feature',
+                     'date'   => '2013-02-09',
+                     'name'   => 'LabVIEW Hacker Download Button Plugin',
+                     'desc'   => 'A simple download button that allows the editor to specifiy the download URL',
                      'url'    => 'www.labviewhacker.com');
     }
 	
@@ -44,16 +44,11 @@ class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin
 	//Set This To True To Enable Debug Strings
 	protected $lvhDebug = false;
 	
-	//Quick Customizations
-	protected $maxImageSize = 200;
-	
 	/***************************************************************************************************************************
 	* Plugin Variables
 	***************************************************************************************************************************/
-	protected $title = '';	
-	protected $image = '';
-	protected $description = array();
-	
+	protected $url = '';	
+		
 	
     /********************************************************************************************************************************************
 	** Plugin Configuration
@@ -63,14 +58,14 @@ class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin
     function getSort() { return 32; }
   
     function connectTo($mode) {
-        $this->Lexer->addEntryPattern('{{lvh_feature.*?(?=.*?}})',$mode,'plugin_lvhfeature');
+        $this->Lexer->addEntryPattern('{{lvh_download_button.*?(?=.*?}})',$mode,'plugin_lvhdownloadbutton');
 		
 		//Add Internal Pattern Match For Product Page Elements	
-		$this->Lexer->addPattern('\|.*?(?=.*?)\n','plugin_lvhfeature');
+		$this->Lexer->addPattern('\|.*?(?=.*?)\n','plugin_lvhdownloadbutton');
     }
 	
     function postConnect() {
-      $this->Lexer->addExitPattern('}}','plugin_lvhfeature');
+      $this->Lexer->addExitPattern('}}','plugin_lvhdownloadbutton');
     }
 	 
 	/********************************************************************************************************************************************
@@ -92,15 +87,9 @@ class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin
 				$value = substr($match, ($tokenDiv + 1));						//Everything after '='
 				switch($token)
 				{
-					case 'title':						
-						$this->title = lvh_parseWikiSyntax($value);
-						break;						
-					case 'image':						
-						$this->image = lvh_getImageLink($value);
-						break;
-					case 'description':						
-						$this->description[] = lvh_parseWikiSyntax($value);
-						break;						
+					case 'url':						
+						$this->url = lvh_forceExternalLink(trim($value));
+						break;			
 					default:
 						break;
 				}
@@ -109,19 +98,12 @@ class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin
 			case DOKU_LEXER_UNMATCHED :
 				break;
 			case DOKU_LEXER_EXIT :
-				/********************************************************************************************************************************************
-				** Build Details Unordered List
-				********************************************************************************************************************************************/			
-				$fullDescription = "<ul>";
-				foreach($this->description as $descLine)
-				{
-					$fullDescription .= '<li>' . $descLine . '</li>';
-				}
-				$fullDescription .= '</ul>';
+				//Build Array To Send To Renderer
+				$retVal = array($state, $this->url);
 				
-				$retVal = array($state, $this->title, $this->image, $fullDescription);
-				//Clear Variables Thta Will Be Resused Here If Neccissary (might not be needed in this plugin)
-				$this->description = array();
+				//Clear Variables Thta Will Be Resused Here If Neccissary
+				$this->ulr = '';
+				
 				return $retVal;
 				break;
 			case DOKU_LEXER_SPECIAL :
@@ -161,56 +143,11 @@ class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin
 				//$renderer->doc.= '</table></body></HTML>';
 				
 				//Separate Data
-				 $instTitle = $data[1];
-				 $instImage = $data[2];
-				 $instDescription = $data[3];				
-				
+				 $instUrl = $data[1];
+				 				
 				$renderer->doc .= "
-					<head>
-						<style type='text/css'>
-						
-							table.libraryFeature
-							{  
-								width:100%;
-								border-width:0px;
-								border-bottom: solid 2px #CCCCCC;
-								background-color: white;	
-								float:left;
-							}
-							
-							tr.libraryFeatureRow
-							{ 
-								border:0px solid;	
-							}							
-
-							td.libraryFeatureCell
-							{ 
-								border:0px solid;
-								vertical-align:middle;	
-							}	
-
-							
-							
-						</style>
-					</head>
-
 					<body>
-						<table class='libraryFeature'>
-							<tr class='libraryFeatureRow'>
-								<td class='libraryFeatureCell'>
-									<h3> " . $instTitle . " </h3>
-								</td>
-								<td class='libraryFeatureCell' rowspan='2'>
-									<center>" . $instImage . " </center>
-								</td>
-							</tr>
-							<tr class='libraryFeatureRow'>
-								<td class='libraryFeatureCell' width='50%'>
-									" . $instDescription . "
-								</td>
-								
-							</tr>
-						</table>
+						<a href=' " . $instUrl . " '> <img src='" . DOKU_BASE . "lib/plugins/lvhdownloadbutton/DownloadButton.png' align='right'> </a>
 					</body>				
 				";		
 				

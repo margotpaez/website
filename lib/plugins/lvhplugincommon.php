@@ -175,5 +175,22 @@
 		$retVal = preg_replace("/\*\*(.*?)\*\*/", "<b>$1</b>", $value);
 		return $retVal;
 	}
+	
+	/*************************************************************************************
+	** forceExternalLink
+	** This function takes a url and forces it to look externally by prepending http:// to
+	** the link if it does not already include it.
+	**************************************************************************************/
+	function lvh_forceExternalLink($value)
+	{
+		//Check if link already contains http:// or https:// if not add http://
+		if( (strpos($value, 'http://')) === false && strpos($value, 'https://') === false)
+		{
+			$retVal = "http://" . $value;
+			return $retVal;
+		}		
+		return $value;		
+	}
+	
 		
 ?>
