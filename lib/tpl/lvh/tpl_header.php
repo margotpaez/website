@@ -143,14 +143,17 @@ if (!defined('DOKU_INC')) die();
 		 <li><a href='/doku.php?id=projects:lv_neatolds_interface:lv_neatolds_interface'><span>LabVIEW Neato LDS Interface</span></a></li>
 		 <li><a href='/doku.php?id=projects:lv_twitter_interface:lv_twitter_interface'><span>LabVIEW Twitter Interface</span></a></li>
 		 <li><a href='/doku.php?id=projects:lv_mindshark:lv_mindshark'><span>LabVIEW MindShark</span></a></li>
+		 <li><a href='/doku.php?id=projects:lv_vex_interface:lv_vex_interface'><span>LabVIEW VEX Interface</span></a></li>
 		 <li><a href='/doku.php?id=projects:lv_wiimote_interface:lv_wiimote_interface'><span>LabVIEW Wiimote Interface</span></a></li>
+		 <li><a href='/doku.php?id=projects:wll:science_fair_mashup'><span>Waterloo Labs: Science Fair Mash Up</span></a></li>
+		 
       </ul>
    </li>
    
    <!-- Learn -->
 	<li class='has-sub '><a href=''><span>Learn</span></a>
 		<ul>
-			<li><a href='/doku.php?id=learn:tutorials:software:github:getting_started'><span>GitHub</span></a></li>
+			<li><a href='/doku.php?id=learn:software:github:getting_started'><span>GitHub</span></a></li>
 		</ul>
    </li>
    
