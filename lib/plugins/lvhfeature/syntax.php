@@ -186,10 +186,8 @@ class syntax_plugin_lvhfeature extends DokuWiki_Syntax_Plugin
 							td.libraryFeatureCell
 							{ 
 								border:0px solid;
-								vertical-align:middle;	
+								vertical-align:middle;	                                
 							}	
-
-							
 							
 						</style>
 					</head>

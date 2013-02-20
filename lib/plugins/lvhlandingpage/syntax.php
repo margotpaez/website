@@ -102,13 +102,13 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 						$this->shortName = $value;
 						break;	
 					case 'getting started path':						
-						$this->gettingStartedPath = $value;
+						$this->gettingStartedPath = stripWikiLinkSyntax($value);
 						break;	
 					case 'github path':						
 						$this->gitHubPath = $value;
 						break;
 					case 'tutorials path':						
-						$this->tutorialsPath = $value;
+						$this->tutorialsPath = stripWikiLinkSyntax($value);
 						break;
 					case 'forum path':						
 						$this->forumPath = $value;
@@ -123,19 +123,19 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 						$this->howItWorks = $value;
 						break;	
 					case 'how it works path':						
-						$this->howItWorksPath = $value;
+						$this->howItWorksPath = stripWikiLinkSyntax($value);
 						break;
 					case 'explore features':						
 						$this->exploreFeatures = $value;
 						break;	
 					case 'explore features path':						
-						$this->exploreFeaturesPath = $value;
+						$this->exploreFeaturesPath = stripWikiLinkSyntax($value);
 						break;	
 					case 'see it in action':						
 						$this->seeItInAction = $value;
 						break;	
 					case 'see it in action path':						
-						$this->seeItInActionPath = $value;
+						$this->seeItInActionPath = stripWikiLinkSyntax($value);
 						break;	
 					case 'getting started':						
 						$this->gettingStarted = $value;
@@ -250,16 +250,16 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 								</tr>
 								<tr>
 									<td width='15%'>
-										<p align='center'><a href='doku.php?id=" . $instgettingStartedPath . "'><img src=\"/lib/exe/fetch.php?media=libraries:getting_started_black.png\" onmouseover=\"this.src='/lib/exe/fetch.php?media=libraries:getting_started_green.png'\" onmouseout=\"this.src='/lib/exe/fetch.php?media=libraries:getting_started_black.png'\" /><br />Getting Started </a><br /></p>
+										<center><a href='" . $instgettingStartedPath . "'><img src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/getting_started_black.png' onmouseover=\"this.src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/getting_started_green.png'\" onmouseout=\"this.src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/getting_started_black.png'\" align='middle'><br />Getting Started</a></center><br />
+									</td>
+									<td width='15%'>										
+										<center><a href='" . $insttutorialsPath . "'><img src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/tutorials_black.png' onmouseover=\"this.src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/tutorials_green.png'\" onmouseout=\"this.src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/tutorials_black.png'\" align='middle'><br />Tutorials</a></center><br />
 									</td>
 									<td width='15%'>
-										<p align='center'><a href='doku.php?id=" . $insttutorialsPath . "'><img src=\"/lib/exe/fetch.php?media=libraries:tutorials_black.png\" onmouseover=\"this.src='/lib/exe/fetch.php?media=libraries:tutorials_green.png'\" onmouseout=\"this.src='/lib/exe/fetch.php?media=libraries:tutorials_black.png'\" /><br />Tutorials </a><br /></p>
+										<center><a href='" . $instforumPath . "'><img src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/forums_black.png' onmouseover=\"this.src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/forums_green.png'\" onmouseout=\"this.src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/forums_black.png'\" align='middle'><br />Forums</a></center><br />
 									</td>
 									<td width='15%'>
-										<p align='center'><a href='" . $instforumPath . "'><img src=\"/lib/exe/fetch.php?media=libraries:forums_black.png\" onmouseover=\"this.src='/lib/exe/fetch.php?media=libraries:forums_green.png'\" onmouseout=\"this.src='/lib/exe/fetch.php?media=libraries:forums_black.png'\" /><br />Forums </a><br /></p>
-									</td>
-									<td width='15%'>
-										<p align='center'><a href='" . $instgitHubPath . "'><img src=\"/lib/exe/fetch.php?media=libraries:github_black.png\" onmouseover=\"this.src='/lib/exe/fetch.php?media=libraries:github_green.png'\" onmouseout=\"this.src='/lib/exe/fetch.php?media=libraries:github_black.png'\" /><br />Git Hub </a><br /></p>
+										<center><a href='" . $instgitHubPath . "'><img src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/github_black.png' onmouseover=\"this.src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/github_green.png'\" onmouseout=\"this.src='" . DOKU_BASE . "lib/plugins/lvhlandingpage/images/github_black.png'\" align='middle'><br />Git Hub</a></center><br />
 									</td>
 																							
 								</tr>
@@ -287,16 +287,16 @@ class syntax_plugin_lvhlandingpage extends DokuWiki_Syntax_Plugin
 								</tr>
 								<tr>
 									<td style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; \">
-										<a href='doku.php?id=" . $insthowItWorksPath . "'> See How " . $instshortName . " Works</a>
+										<a href='" . $insthowItWorksPath . "'> See How " . $instshortName . " Works</a>
 									</td>
 									<td style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; \">
-										<a href='doku.php?id=" . $instexploreFeaturesPath . "'> Explore " . $instshortName . " Features</a> 	
+										<a href='" . $instexploreFeaturesPath . "'> Explore " . $instshortName . " Features</a> 	
 									</td>
 									<td style=\"border-right: dotted 2px #CCCCCC; padding-left: 20px; \">
-										<a href='doku.php?id=" . $instseeItInActionPath . "'> Projects Using " . $instshortName . "</a> 
+										<a href='" . $instseeItInActionPath . "'> Projects Using " . $instshortName . "</a> 
 									</td>
 									<td style=\"padding-left: 20px;\">
-										 <a href='doku.php?id=" . $instgettingStartedPath . "'> Start Using " . $instshortName . "</a> 
+										 <a href='" . $instgettingStartedPath . "'> Start Using " . $instshortName . "</a> 
 									</td>
 							</table>
 						</body>

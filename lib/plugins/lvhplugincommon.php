@@ -74,18 +74,21 @@
 		//Get Common Variables
 		$mediaManagerFetchURL = lvh_getMediaManagerFetchURL();
 		$imageURL = '';
-		//$imageSize = 200;	//Arbitrary Default Should Be Overwritten By User
+		$imageSize = 150;	//Arbitrary Default Should Be Overwritten By User
 		
 		//Wiki Format
 		if(preg_match('/{{.*?}}/', $value) == 1)
 		{
-			//Check If Syntax Contains Size
-			if(preg_match('/\?[0-9]+/', $value, $matches) == 1)
+			//Check If Wiki Syntax Contains A '?'.  If So Strip Any Meta Data Such As Link Type Or Image Size
+			if(strstr($value, '?') == true)
 			{
 				//Image Syntax Contains Size
 				//Get Image Size
-				$imageSize = substr($matches[0], 1);
-				//Image URL
+                $sizeStart = strpos($value, '?') + 1;        //This is a bad way to do this, I was in a hurry.  There might be other meta data that should be properly parsed here.
+                $sizeEnd = strpos($value, '}');
+                $imageSize = substr($value, $sizeStart, $sizeEnd-$sizeStart);
+				
+                //Image URL
 				$delPos = strpos($value, ':');
 				$endPos = strPos($value, '?');
 				$shortVal = substr($value, $delPos, ($endPos-$delPos)); 
@@ -191,6 +194,21 @@
 		}		
 		return $value;		
 	}
+    
+    /*************************************************************************************
+	** parseWikiLinkSyntax
+	** This function will remove the [[ | and ]] bits from a wiki link and add the base
+    ** URL to the path.  This helps analytics and tracking.
+	**************************************************************************************/
+	function stripWikiLinkSyntax($value)
+	{
+		//Check if link already contains http:// or https:// if not add http://
+		$value = str_replace('[', '', $value);
+        $value = str_replace(']', '', $value);
+        $value = str_replace('|', '', $value);
+        return "/doku.php?id=" . $value;        
+	}
+    
 	
 		
 ?>
