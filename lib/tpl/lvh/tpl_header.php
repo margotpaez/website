@@ -122,7 +122,7 @@ if (!defined('DOKU_INC')) die();
 <link href="/menu_assets/styles.css" rel="stylesheet" type="text/css"> 
 
 <!--******** Added By SK - Navbar Menu ********-->		
-	<div id='cssmenu'>
+<div id='cssmenu'>
 <ul>
    <li><a href='/'><span>Home</span></a></li>
    <li class='has-sub '><a href='/doku.php?id=libraries:libraries'><span>Libraries</span></a>
@@ -145,15 +145,21 @@ if (!defined('DOKU_INC')) die();
 		 <li><a href='/doku.php?id=projects:lv_mindshark:lv_mindshark'><span>LabVIEW MindShark</span></a></li>
 		 <li><a href='/doku.php?id=projects:lv_vex_interface:lv_vex_interface'><span>LabVIEW VEX Interface</span></a></li>
 		 <li><a href='/doku.php?id=projects:lv_wiimote_interface:lv_wiimote_interface'><span>LabVIEW Wiimote Interface</span></a></li>
-		 <li><a href='/doku.php?id=projects:wll:science_fair_mashup'><span>Waterloo Labs: Science Fair Mash Up</span></a></li>
-		 
+		 <li><a href='/doku.php?id=projects:wll:science_fair_mashup'><span>Waterloo Labs: Science Fair Mash Up</span></a></li>		 
       </ul>
    </li>
    
    <!-- Learn -->
 	<li class='has-sub '><a href=''><span>Learn</span></a>
 		<ul>
-			<li><a href='/doku.php?id=learn:software:github:getting_started'><span>GitHub</span></a></li>
+			<li><a href='/doku.php?id=learn:software:github:getting_started'><span>GitHub Basics</span></a></li>
+            <li class='has-sub '><a href='/doku.php?id=learn:software:github:labview_development_process_first_time_setup'><span>LabVIEW & GitHub</span></a>
+                <ul>
+                    <li class='last'><a href='/doku.php?id=learn:software:github:labview_development_process_first_time_setup'><span>First Time Setup</span></a></li>
+                    <li class='last'><a href='/doku.php?id=learn:software:github:labview_development_process_new_project'><span>Starting a New Project</span></a></li>
+                    <li class='last'><a href='/doku.php?id=learn:software:github:labview_development_process_existing_project'><span>Contributing to a LVH Project</span></a></li>
+                </ul>
+            </li>
 		</ul>
    </li>
    

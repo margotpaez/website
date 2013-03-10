@@ -1,0 +1,7 @@
+base skproductpage
+author Sammy_K
+email 
+date 10-2012
+name Product Page
+desc Dreamgineer Product Page
+url No URL

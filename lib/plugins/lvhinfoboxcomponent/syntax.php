@@ -117,7 +117,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 				//Find The Token And Value (Before '=' remove white space, convert to lower case).
 				$tokenDiv = strpos($match, '=');								//Find Token Value Divider ('=')
 				$token = strtolower(trim(substr($match, 1, ($tokenDiv - 1))));	//Everything Before '=', Remove White Space, Convert To Lower Case
-				$value = substr($match, ($tokenDiv + 1));						//Everything after '='
+				$value = trim(substr($match, ($tokenDiv + 1)));						//Everything after '='
 				switch($token)
 				{
 					//Basics
@@ -128,7 +128,7 @@ class syntax_plugin_lvhinfoboxcomponent extends DokuWiki_Syntax_Plugin
 						$this->category = lvh_allowSimpleWikiSyntax($value);
 						break;
 					case 'image':						
-						$this->image = lvh_getImageLink($value);
+						$this->image = lvh_allowSimpleWikiSyntax($value);
 						break;
 						
 					//Product History

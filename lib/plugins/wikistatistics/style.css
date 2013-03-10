@@ -1,0 +1,27 @@
+
+table.info_hof {
+	width:80%;
+}
+
+.hof_evenrow {
+	background-color:__background_other__;
+}
+.hof_oddrow {
+	background-color:__background__;
+}
+.hof_caption {
+	font-weight:bold;
+	font-size:120%;
+	padding-bottom:4px;
+}
+.hof_row_pos {
+	text-align:center;
+	width:10%;
+}
+.hof_row_name {
+	text-align:left;
+}
+.hof_row_num {
+	text-align:right;
+	width:15%;
+}

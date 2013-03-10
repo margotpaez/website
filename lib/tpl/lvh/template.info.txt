@@ -1,7 +1,8 @@
 ﻿base     dokuwiki
-author   Anika Henke
-email    anika@selfthinker.org
-date     2012-09-08
-name     DokuWiki Template
-desc     DokuWiki's default template since 2012
-url      http://www.dokuwiki.org/template:dokuwiki
+author   Sam Kristoff
+email    labviewhacker@gmail.com
+date     2013-3-10
+name     LabVIEW Hacker DokuWiki Template
+desc     Custom Dokuwiki Template for LabVIEWHacker.com
+url      http://www.labviewhacker.com
+ 
